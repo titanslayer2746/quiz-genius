@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import {
   Brain,
@@ -11,27 +11,6 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-const difficultyOptions = [
-  {
-    value: "easy",
-    label: "Easy",
-    color: "bg-green-100 border-green-300 text-green-800",
-    icon: "🌱",
-  },
-  {
-    value: "medium",
-    label: "Medium",
-    color: "bg-yellow-100 border-yellow-300 text-yellow-800",
-    icon: "🌿",
-  },
-  {
-    value: "hard",
-    label: "Hard",
-    color: "bg-red-100 border-red-300 text-red-800",
-    icon: "🌳",
-  },
-];
 
 const features = [
   {
@@ -85,20 +64,13 @@ const howToUse = [
 ];
 
 /**
- * Enhanced LandingPage component that serves as the entry point for the quiz application.
- * It provides comprehensive information about the app and allows users to start a quiz.
+ * LandingPage component that serves as the introduction and how-to-use guide for the quiz application.
  */
 const LandingPage = () => {
   const navigate = useNavigate();
-  const [topic, setTopic] = useState("");
-  const [difficulty, setDifficulty] = useState("medium");
 
   const handleStartQuiz = () => {
-    if (topic.trim()) {
-      navigate("/quiz-form", {
-        state: { topic: topic.trim(), difficulty },
-      });
-    }
+    navigate("/quiz");
   };
 
   return (
@@ -130,72 +102,20 @@ const LandingPage = () => {
               challenge yourself, and discover new subjects.
             </p>
 
-            {/* Quick Start Form */}
+            {/* CTA Button */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="max-w-md mx-auto bg-white rounded-xl shadow-lg p-6"
             >
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              <button
+                onClick={handleStartQuiz}
+                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all shadow-lg"
+              >
+                <Zap size={20} className="mr-2" />
                 Start Your Quiz Journey
-              </h3>
-
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    What would you like to learn about?
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      placeholder="e.g., Quantum Physics, World History..."
-                      value={topic}
-                      onChange={(e) => setTopic(e.target.value)}
-                    />
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                      <Sparkles size={20} className="text-gray-400" />
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Difficulty Level
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {difficultyOptions.map((option) => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        className={`
-                          py-2 px-3 border rounded-lg text-sm font-medium transition-all
-                          ${
-                            difficulty === option.value
-                              ? option.color
-                              : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
-                          }
-                        `}
-                        onClick={() => setDifficulty(option.value)}
-                      >
-                        <span className="mr-1">{option.icon}</span>
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleStartQuiz}
-                  disabled={!topic.trim()}
-                  className="w-full flex justify-center items-center py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <Zap size={20} className="mr-2" />
-                  Generate Quiz
-                  <ArrowRight size={20} className="ml-2" />
-                </button>
-              </div>
+                <ArrowRight size={20} className="ml-2" />
+              </button>
             </motion.div>
           </motion.div>
         </div>
@@ -303,7 +223,7 @@ const LandingPage = () => {
               expand their knowledge
             </p>
             <button
-              onClick={() => navigate("/quiz-form")}
+              onClick={handleStartQuiz}
               className="inline-flex items-center px-8 py-4 bg-white text-indigo-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
             >
               <CheckCircle size={20} className="mr-2" />

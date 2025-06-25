@@ -1,190 +1,48 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Github } from "lucide-react";
-import LandingPage from "./components/LandingPage";
-import Quiz from "./components/Quiz";
-import Results from "./components/Results";
-import generateQuiz from "./services/quizService";
+import LandingPage from "./components/LandingPage.tsx";
+import QuizPage from "./components/QuizPage.tsx";
 import "./index.css";
 
-const AppStates = {
-  LANDING: "landing",
-  LOADING: "loading",
-  QUIZ: "quiz",
-  RESULTS: "results",
-};
-
 /**
- * Main application component that manages the overall state and flow of the quiz application.
- * It handles the different states of the application (landing, loading, quiz, results) and
- * coordinates between different components.
+ * Main application component that sets up routing for the quiz application.
+ * It provides a consistent header and footer across all pages.
  */
 function App() {
-  // State to track the current application state (landing, loading, quiz, results)
-  const [appState, setAppState] = useState(AppStates.LANDING);
-  // State to store quiz data including questions, topic, and difficulty
-  const [quizData, setQuizData] = useState({
-    questions: [],
-    topic: "",
-    difficulty: "",
-  });
-  // State to store user's answers
-  const [answers, setAnswers] = useState([]);
-  // State to handle any errors that occur during quiz generation
-  const [error, setError] = useState(null);
-
-  /**
-   * Handles the start of a new quiz by generating questions based on topic and difficulty.
-   * @param {string} topic - The topic for the quiz
-   * @param {string} difficulty - The difficulty level (easy, medium, hard)
-   */
-  const handleStartQuiz = async (topic, difficulty) => {
-    setAppState(AppStates.LOADING);
-    setError(null);
-
-    try {
-      const questions = await generateQuiz(difficulty, topic);
-
-      setQuizData({
-        questions,
-        topic,
-        difficulty,
-      });
-
-      setAppState(AppStates.QUIZ);
-    } catch (error) {
-      console.error("Error generating quiz:", error);
-      setError(
-        "We couldn't generate your quiz. Please check your API key and try again."
-      );
-      setAppState(AppStates.LANDING);
-    }
-  };
-
-  /**
-   * Handles the completion of the quiz and transitions to the results screen.
-   * @param {boolean[]} quizAnswers - Array of boolean values indicating correct/incorrect answers
-   */
-  const handleQuizComplete = (quizAnswers) => {
-    setAnswers(quizAnswers);
-    setAppState(AppStates.RESULTS);
-  };
-
-  /**
-   * Resets the application state to start a new quiz.
-   */
-  const handleRestart = () => {
-    setAppState(AppStates.LANDING);
-    setAnswers([]);
-  };
-
-  // Animation variants for smooth page transitions
-  const pageVariants = {
-    initial: { opacity: 0 },
-    in: { opacity: 1 },
-    out: { opacity: 0 },
-  };
-
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      <header className="bg-white shadow-sm py-4 px-4">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold text-indigo-600">QuizGenius</h1>
-          <a
-            href="https://github.com/titanslayer2746"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-500 hover:text-gray-700 flex items-center gap-2"
-          >
-            <Github size={20} />
-            <span className="text-sm">GitHub</span>
-          </a>
-        </div>
-      </header>
+    <Router>
+      <div className="min-h-screen bg-gray-100 flex flex-col">
+        <header className="bg-white shadow-sm py-4 px-4">
+          <div className="container mx-auto flex justify-between items-center">
+            <h1 className="text-xl font-bold text-indigo-600">QuizGenius</h1>
+            <a
+              href="https://github.com/titanslayer2746"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:text-gray-700 flex items-center gap-2"
+            >
+              <Github size={20} />
+              <span className="text-sm">GitHub</span>
+            </a>
+          </div>
+        </header>
 
-      <main className="flex-grow flex items-center justify-center p-6">
-        <div className="container mx-auto max-w-4xl">
-          <AnimatePresence mode="wait">
-            {appState === AppStates.LANDING && (
-              <motion.div
-                key="landing"
-                initial="initial"
-                animate="in"
-                exit="out"
-                variants={pageVariants}
-                transition={{ duration: 0.3 }}
-              >
-                <LandingPage onStartQuiz={handleStartQuiz} />
-                {error && (
-                  <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-center">
-                    {error}
-                  </div>
-                )}
-              </motion.div>
-            )}
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/quiz" element={<QuizPage />} />
+          </Routes>
+        </main>
 
-            {appState === AppStates.LOADING && (
-              <motion.div
-                key="loading"
-                initial="initial"
-                animate="in"
-                exit="out"
-                variants={pageVariants}
-                transition={{ duration: 0.3 }}
-                className="text-center"
-              >
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600 mb-4"></div>
-                <p className="text-gray-600">
-                  Generating your quiz, please wait...
-                </p>
-              </motion.div>
-            )}
-
-            {appState === AppStates.QUIZ && (
-              <motion.div
-                key="quiz"
-                initial="initial"
-                animate="in"
-                exit="out"
-                variants={pageVariants}
-                transition={{ duration: 0.3 }}
-              >
-                <Quiz
-                  questions={quizData.questions}
-                  onComplete={handleQuizComplete}
-                />
-              </motion.div>
-            )}
-
-            {appState === AppStates.RESULTS && (
-              <motion.div
-                key="results"
-                initial="initial"
-                animate="in"
-                exit="out"
-                variants={pageVariants}
-                transition={{ duration: 0.3 }}
-              >
-                <Results
-                  answers={answers}
-                  totalQuestions={quizData.questions.length}
-                  topic={quizData.topic}
-                  difficulty={quizData.difficulty}
-                  onRestart={handleRestart}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </main>
-
-      <footer className="bg-white py-4 px-4 border-t">
-        <div className="container mx-auto text-center text-sm text-gray-500">
-          <p>© {new Date().getFullYear()} QuizGenius. All rights reserved.</p>
-          <p className="text-xs mt-1">Super Powered by Gemini AI</p>
-        </div>
-      </footer>
-    </div>
+        <footer className="bg-white py-4 px-4 border-t">
+          <div className="container mx-auto text-center text-sm text-gray-500">
+            <p>© {new Date().getFullYear()} QuizGenius. All rights reserved.</p>
+            <p className="text-xs mt-1">Super Powered by Gemini AI</p>
+          </div>
+        </footer>
+      </div>
+    </Router>
   );
 }
 
