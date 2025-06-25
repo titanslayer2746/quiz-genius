@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Github } from 'lucide-react';
-import LandingPage from './components/LandingPage';
-import Quiz from './components/Quiz';
-import Results from './components/Results';
-import generateQuiz from './services/quizService';
-import './index.css';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Github } from "lucide-react";
+import LandingPage from "./components/LandingPage";
+import Quiz from "./components/Quiz";
+import Results from "./components/Results";
+import generateQuiz from "./services/quizService";
+import "./index.css";
 
 const AppStates = {
-  LANDING: 'landing',
-  LOADING: 'loading',
-  QUIZ: 'quiz',
-  RESULTS: 'results',
+  LANDING: "landing",
+  LOADING: "loading",
+  QUIZ: "quiz",
+  RESULTS: "results",
 };
 
 /**
@@ -25,8 +25,8 @@ function App() {
   // State to store quiz data including questions, topic, and difficulty
   const [quizData, setQuizData] = useState({
     questions: [],
-    topic: '',
-    difficulty: '',
+    topic: "",
+    difficulty: "",
   });
   // State to store user's answers
   const [answers, setAnswers] = useState([]);
@@ -41,20 +41,22 @@ function App() {
   const handleStartQuiz = async (topic, difficulty) => {
     setAppState(AppStates.LOADING);
     setError(null);
-    
+
     try {
       const questions = await generateQuiz(difficulty, topic);
-      
+
       setQuizData({
         questions,
         topic,
         difficulty,
       });
-      
+
       setAppState(AppStates.QUIZ);
     } catch (error) {
       console.error("Error generating quiz:", error);
-      setError("We couldn't generate your quiz. Please check your API key and try again.");
+      setError(
+        "We couldn't generate your quiz. Please check your API key and try again."
+      );
       setAppState(AppStates.LANDING);
     }
   };
@@ -88,9 +90,9 @@ function App() {
       <header className="bg-white shadow-sm py-4 px-4">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-xl font-bold text-indigo-600">QuizGenius</h1>
-          <a 
-            href="https://github.com/titanslayer2746" 
-            target="_blank" 
+          <a
+            href="https://github.com/titanslayer2746"
+            target="_blank"
             rel="noopener noreferrer"
             className="text-gray-500 hover:text-gray-700 flex items-center gap-2"
           >
@@ -132,7 +134,9 @@ function App() {
                 className="text-center"
               >
                 <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600 mb-4"></div>
-                <p className="text-gray-600">Generating your quiz, please wait...</p>
+                <p className="text-gray-600">
+                  Generating your quiz, please wait...
+                </p>
               </motion.div>
             )}
 
@@ -145,9 +149,9 @@ function App() {
                 variants={pageVariants}
                 transition={{ duration: 0.3 }}
               >
-                <Quiz 
-                  questions={quizData.questions} 
-                  onComplete={handleQuizComplete} 
+                <Quiz
+                  questions={quizData.questions}
+                  onComplete={handleQuizComplete}
                 />
               </motion.div>
             )}
@@ -161,8 +165,8 @@ function App() {
                 variants={pageVariants}
                 transition={{ duration: 0.3 }}
               >
-                <Results 
-                  answers={answers} 
+                <Results
+                  answers={answers}
                   totalQuestions={quizData.questions.length}
                   topic={quizData.topic}
                   difficulty={quizData.difficulty}

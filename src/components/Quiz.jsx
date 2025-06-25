@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Timer, ArrowLeft, ArrowRight } from 'lucide-react';
-import QuizQuestion from './QuizQuestion';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Timer, ArrowLeft, ArrowRight } from "lucide-react";
+import QuizQuestion from "./QuizQuestion";
 
 /**
  * Quiz component that manages the quiz flow, including question navigation and timer.
  * It handles the display of questions and tracks user answers.
- * 
+ *
  * @param {Object} props - Component props
  * @param {Array} props.questions - Array of quiz questions
  * @param {Function} props.onComplete - Callback function when quiz is completed
@@ -22,13 +22,13 @@ const Quiz = ({ questions, onComplete }) => {
   const [showControls, setShowControls] = useState(false);
 
   const currentQuestion = questions[currentQuestionIndex];
-  
+
   useEffect(() => {
     // Reset timer when question changes
     setTimer(30);
-    
+
     const countdown = setInterval(() => {
-      setTimer(prevTimer => {
+      setTimer((prevTimer) => {
         if (prevTimer <= 1) {
           clearInterval(countdown);
           // Auto-submit if time runs out
@@ -38,7 +38,7 @@ const Quiz = ({ questions, onComplete }) => {
         return prevTimer - 1;
       });
     }, 1000);
-    
+
     return () => clearInterval(countdown);
   }, [currentQuestionIndex]);
 
@@ -63,15 +63,18 @@ const Quiz = ({ questions, onComplete }) => {
    * @param {string} direction - Direction to navigate ('prev' or 'next')
    */
   const navigateQuestion = (direction) => {
-    if (direction === 'prev' && currentQuestionIndex > 0) {
+    if (direction === "prev" && currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
-    } else if (direction === 'next' && currentQuestionIndex < questions.length - 1) {
+    } else if (
+      direction === "next" &&
+      currentQuestionIndex < questions.length - 1
+    ) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
   };
 
   return (
-    <motion.div 
+    <motion.div
       className="w-full"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -96,40 +99,50 @@ const Quiz = ({ questions, onComplete }) => {
       {/* Navigation controls (shown on hover for desktop) */}
       <AnimatePresence>
         {showControls && (
-          <motion.div 
+          <motion.div
             className="hidden md:flex justify-between items-center w-full max-w-xl mx-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <button
-              onClick={() => navigateQuestion('prev')}
-              disabled={currentQuestionIndex === 0 || answers.length <= currentQuestionIndex}
+              onClick={() => navigateQuestion("prev")}
+              disabled={
+                currentQuestionIndex === 0 ||
+                answers.length <= currentQuestionIndex
+              }
               className={`p-2 rounded-full ${
-                currentQuestionIndex === 0 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-100'
+                currentQuestionIndex === 0
+                  ? "text-gray-300 cursor-not-allowed"
+                  : "text-gray-600 hover:bg-gray-100"
               }`}
             >
               <ArrowLeft size={20} />
             </button>
             <div className="flex space-x-1">
               {questions.map((_, index) => (
-                <div 
+                <div
                   key={index}
                   className={`w-2 h-2 rounded-full ${
-                    index === currentQuestionIndex 
-                      ? 'bg-indigo-600' 
-                      : index < answers.length 
-                        ? 'bg-indigo-300' 
-                        : 'bg-gray-300'
+                    index === currentQuestionIndex
+                      ? "bg-indigo-600"
+                      : index < answers.length
+                      ? "bg-indigo-300"
+                      : "bg-gray-300"
                   }`}
                 ></div>
               ))}
             </div>
             <button
-              onClick={() => navigateQuestion('next')}
-              disabled={currentQuestionIndex === questions.length - 1 || answers.length <= currentQuestionIndex}
+              onClick={() => navigateQuestion("next")}
+              disabled={
+                currentQuestionIndex === questions.length - 1 ||
+                answers.length <= currentQuestionIndex
+              }
               className={`p-2 rounded-full ${
-                currentQuestionIndex === questions.length - 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-100'
+                currentQuestionIndex === questions.length - 1
+                  ? "text-gray-300 cursor-not-allowed"
+                  : "text-gray-600 hover:bg-gray-100"
               }`}
             >
               <ArrowRight size={20} />

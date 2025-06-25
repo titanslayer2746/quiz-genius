@@ -1,25 +1,37 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Brain, Sparkles } from 'lucide-react';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Brain, Sparkles } from "lucide-react";
 
 const difficultyOptions = [
-  { value: 'easy', label: 'Easy', color: 'bg-green-100 border-green-300 text-green-800' },
-  { value: 'medium', label: 'Medium', color: 'bg-yellow-100 border-yellow-300 text-yellow-800' },
-  { value: 'hard', label: 'Hard', color: 'bg-red-100 border-red-300 text-red-800' }
+  {
+    value: "easy",
+    label: "Easy",
+    color: "bg-green-100 border-green-300 text-green-800",
+  },
+  {
+    value: "medium",
+    label: "Medium",
+    color: "bg-yellow-100 border-yellow-300 text-yellow-800",
+  },
+  {
+    value: "hard",
+    label: "Hard",
+    color: "bg-red-100 border-red-300 text-red-800",
+  },
 ];
 
 /**
  * LandingPage component that serves as the entry point for the quiz application.
  * It allows users to select a topic and difficulty level before starting the quiz.
- * 
+ *
  * @param {Object} props - Component props
  * @param {Function} props.onStartQuiz - Callback function to start the quiz with selected topic and difficulty
  */
 const LandingPage = ({ onStartQuiz }) => {
   // State to store the selected topic
-  const [topic, setTopic] = useState('');
+  const [topic, setTopic] = useState("");
   // State to store the selected difficulty level (default: medium)
-  const [difficulty, setDifficulty] = useState('medium');
+  const [difficulty, setDifficulty] = useState("medium");
   // State to track loading state during quiz generation
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,14 +47,14 @@ const LandingPage = ({ onStartQuiz }) => {
   };
 
   return (
-    <motion.div 
+    <motion.div
       className="w-full max-w-md mx-auto"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
       <div className="flex justify-center mb-6">
-        <motion.div 
+        <motion.div
           className="rounded-full p-4 bg-indigo-100"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -51,12 +63,19 @@ const LandingPage = ({ onStartQuiz }) => {
         </motion.div>
       </div>
 
-      <h1 className="text-3xl font-bold text-center mb-2 text-gray-800">QuizGenius</h1>
-      <p className="text-center text-gray-600 mb-8">Test your knowledge on any topic</p>
+      <h1 className="text-3xl font-bold text-center mb-2 text-gray-800">
+        QuizGenius
+      </h1>
+      <p className="text-center text-gray-600 mb-8">
+        Test your knowledge on any topic
+      </p>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="topic" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="topic"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             What would you like to learn about?
           </label>
           <div className="relative rounded-md shadow-sm">
@@ -73,7 +92,9 @@ const LandingPage = ({ onStartQuiz }) => {
               <Sparkles size={20} className="text-gray-400" />
             </div>
           </div>
-          <p className="mt-1 text-xs text-gray-500">For example: Quantum Physics, World History, Machine Learning...</p>
+          <p className="mt-1 text-xs text-gray-500">
+            For example: Quantum Physics, World History, Machine Learning...
+          </p>
         </div>
 
         <div>
@@ -87,7 +108,11 @@ const LandingPage = ({ onStartQuiz }) => {
                 type="button"
                 className={`
                   py-2 px-3 border rounded-md text-sm font-medium transition-all
-                  ${difficulty === option.value ? option.color : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}
+                  ${
+                    difficulty === option.value
+                      ? option.color
+                      : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                  }
                 `}
                 onClick={() => setDifficulty(option.value)}
               >
@@ -104,14 +129,30 @@ const LandingPage = ({ onStartQuiz }) => {
         >
           {isLoading ? (
             <>
-              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <svg
+                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
               Generating Quiz...
             </>
           ) : (
-            'Generate Quiz'
+            "Generate Quiz"
           )}
         </button>
       </form>

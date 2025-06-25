@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, XCircle } from 'lucide-react';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { CheckCircle, XCircle } from "lucide-react";
 
 /**
  * QuizQuestion component that displays a single quiz question with multiple choice options.
  * It handles user interaction and provides visual feedback for correct/incorrect answers.
- * 
+ *
  * @param {Object} props - Component props
  * @param {Object} props.question - The current question object
  * @param {Object} props.options - Object containing answer options
@@ -14,7 +14,14 @@ import { CheckCircle, XCircle } from 'lucide-react';
  * @param {number} props.totalQuestions - Total number of questions
  * @param {number} props.timer - Time remaining for the current question
  */
-const QuizQuestion = ({ question, options, onAnswer, currentQuestion, totalQuestions, timer }) => {
+const QuizQuestion = ({
+  question,
+  options,
+  onAnswer,
+  currentQuestion,
+  totalQuestions,
+  timer,
+}) => {
   // State to track the selected option
   const [selectedOption, setSelectedOption] = useState(null);
   // State to track if the question has been answered
@@ -29,13 +36,13 @@ const QuizQuestion = ({ question, options, onAnswer, currentQuestion, totalQuest
    */
   const handleOptionSelect = (option) => {
     if (isAnswered) return;
-    
+
     setSelectedOption(option);
     setIsAnswered(true);
-    
+
     const correct = option === question.answer;
     setIsCorrect(correct);
-    
+
     // Give the user a moment to see the result before moving to next question
     setTimeout(() => {
       onAnswer(correct);
@@ -51,18 +58,18 @@ const QuizQuestion = ({ question, options, onAnswer, currentQuestion, totalQuest
    */
   const getOptionClass = (option) => {
     if (!isAnswered || selectedOption !== option) {
-      return 'border-gray-300 bg-white hover:bg-gray-50';
+      return "border-gray-300 bg-white hover:bg-gray-50";
     }
-    
+
     if (option === question.answer) {
-      return 'border-green-500 bg-green-50 text-green-700';
+      return "border-green-500 bg-green-50 text-green-700";
     }
-    
-    return 'border-red-500 bg-red-50 text-red-700';
+
+    return "border-red-500 bg-red-50 text-red-700";
   };
 
   return (
-    <motion.div 
+    <motion.div
       className="w-full max-w-xl mx-auto"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
@@ -81,23 +88,29 @@ const QuizQuestion = ({ question, options, onAnswer, currentQuestion, totalQuest
       </div>
 
       <div className="w-full bg-gray-200 rounded-full h-1.5 mb-6">
-        <motion.div 
+        <motion.div
           className="bg-indigo-600 h-1.5 rounded-full"
-          initial={{ width: `${((currentQuestion - 1) / totalQuestions) * 100}%` }}
+          initial={{
+            width: `${((currentQuestion - 1) / totalQuestions) * 100}%`,
+          }}
           animate={{ width: `${(currentQuestion / totalQuestions) * 100}%` }}
           transition={{ duration: 0.5 }}
         ></motion.div>
       </div>
 
       <div className="mb-6">
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">{question.question}</h3>
+        <h3 className="text-xl font-semibold text-gray-800 mb-2">
+          {question.question}
+        </h3>
       </div>
 
       <div className="space-y-3">
         {Object.entries(options).map(([key, value]) => (
           <motion.button
             key={key}
-            className={`w-full text-left p-4 border rounded-lg transition-all ${getOptionClass(key)}`}
+            className={`w-full text-left p-4 border rounded-lg transition-all ${getOptionClass(
+              key
+            )}`}
             onClick={() => handleOptionSelect(key)}
             whileHover={{ scale: isAnswered ? 1 : 1.01 }}
             whileTap={{ scale: isAnswered ? 1 : 0.99 }}
@@ -107,7 +120,7 @@ const QuizQuestion = ({ question, options, onAnswer, currentQuestion, totalQuest
                 {key.toUpperCase()}
               </span>
               <span className="flex-1">{value}</span>
-              
+
               {isAnswered && selectedOption === key && (
                 <AnimatePresence>
                   <motion.div
@@ -115,10 +128,11 @@ const QuizQuestion = ({ question, options, onAnswer, currentQuestion, totalQuest
                     animate={{ scale: 1 }}
                     exit={{ scale: 0 }}
                   >
-                    {isCorrect ? 
-                      <CheckCircle className="text-green-500 ml-2" size={20} /> : 
+                    {isCorrect ? (
+                      <CheckCircle className="text-green-500 ml-2" size={20} />
+                    ) : (
                       <XCircle className="text-red-500 ml-2" size={20} />
-                    }
+                    )}
                   </motion.div>
                 </AnimatePresence>
               )}
